@@ -11,6 +11,7 @@ interface IState {
 	players: any[],
 	open: boolean,
 	uploadFileList: any,
+	playerlist: boolean
 }
 
 class App extends React.Component<{}, IState> {
@@ -20,7 +21,8 @@ class App extends React.Component<{}, IState> {
 			currentPlayer: {"id":0, "name":"Loading ","url":"","country":"","runs":"","wickets":"","catches":"0"},
 			players: [],
 			open: false,
-			uploadFileList: null
+			uploadFileList: null,
+			playerlist: false,
 		}     	
 		this.selectNewPlayer = this.selectNewPlayer.bind(this)
 		this.fetchPlayers = this.fetchPlayers.bind(this)
@@ -35,17 +37,30 @@ class App extends React.Component<{}, IState> {
 		<div>
 			<div className="header-wrapper">
 				<div className="container header">
-					<img src={PatrickLogo} height='40'/>&nbsp; Cricket - MSA 2018 &nbsp;
+					<img src={PatrickLogo} height='40'/>&nbsp; CricStats &nbsp;
 					<div className="btn btn-primary btn-action btn-add" onClick={this.onOpenModal}>Add Player</div>
 				</div>
 			</div>
 			<div className="container">
-				<div className="row">
-					<div className="col-7">
-						<PlayerDetail currentPlayer={this.state.currentPlayer} />
+				<div className="row top-padding">
+					<div 
+						className="playerlist"
+						onClick={this.togglelist}
+					>
+					{
+						!this.state.playerlist ?
+						<span>Player List</span>
+						:
+						<span>Players</span>
+					}
 					</div>
-					<div className="col-5">
+					<div className="col-lg-12">
+					{
+						!this.state.playerlist ?
+						<PlayerDetail currentPlayer={this.state.currentPlayer}/>
+						:
 						<PlayerList players={this.state.players} selectNewPlayer={this.selectNewPlayer} searchByName={this.fetchPlayers}/>
+					}
 					</div>
 				</div>
 			</div>
@@ -83,6 +98,10 @@ class App extends React.Component<{}, IState> {
 		);
 	}
 
+	private togglelist = () => {
+		this.setState({ playerlist: !this.state.playerlist})
+	}
+
 	// Modal open
 	private onOpenModal = () => {
 		this.setState({ open: true });
@@ -110,7 +129,7 @@ class App extends React.Component<{}, IState> {
 		})
 		.then(res => res.json())
 		.then(json => {
-			let currentPlayer = json[0]
+			let currentPlayer = json
 			if (currentPlayer === undefined) {
 				currentPlayer = {"id":0, "name":"No Players with that Name ","url":"","country":"","runs":"","wickets":"","catches":""}
 			}

@@ -6,7 +6,13 @@ interface IProps {
 }
 
 interface IState {
-    open: boolean
+    open: boolean,
+    playerId: number,
+    playerName: string,
+    countryEdit: string,
+    runsEdit: string,
+    wicketsEdit: string,
+    catchesEdit: string,
 }
 
 export default class PlayerDetail extends React.Component<IProps, IState> {
@@ -14,7 +20,13 @@ export default class PlayerDetail extends React.Component<IProps, IState> {
     constructor(props: any) {
         super(props)   
         this.state = {
-            open: false
+            open: false,
+            playerId: 0,
+            playerName: '',
+            countryEdit: '',
+            runsEdit: '',
+            wicketsEdit: '',
+            catchesEdit: '',
         }
 
         this.updatePlayer = this.updatePlayer.bind(this)
@@ -25,44 +37,66 @@ export default class PlayerDetail extends React.Component<IProps, IState> {
         const currentPlayer = this.props.currentPlayer
         const { open } = this.state;
 		return (
-			<div className="container player-wrapper">
-                <div className="row player-heading">
-                    <b>{currentPlayer.name}</b>&nbsp; Country: {currentPlayer.country}&nbsp; Runs: {currentPlayer.runs}&nbsp; Wickets: {currentPlayer.wickets}&nbsp; Catches: {currentPlayer.catches}
+            <div className="row odd-even">
+                {
+                Object.keys(currentPlayer).map((key:any, index) => (
+                    <div className="col-lg-3 col-md-4 col-sm-6 padding-around">
+                    <div className={`player-wrapper ${index}`}>
+                    <div className="player-img">
+                        <img src={currentPlayer[key].url}/>
+                    </div>
+                    <div className={`${key % 2 === 1 ? 'even-stats' : 'odd-stats' } player-stats`}>
+                        <p>{currentPlayer[key].name}</p>
+                        <p>Country: <span>{currentPlayer[key].country}</span></p>
+                        <p>Runs: <span>{currentPlayer[key].runs}</span></p>
+                        <p>Wickets: <span>{currentPlayer[key].wickets}</span></p>
+                        <p>Catches: <span>{currentPlayer[key].catches}</span></p>
+                        <div className="player-done-button">
+                            <div className="btn-custom" onClick={this.onOpenModal}>Edit </div>
+                            <div className="btn-custom delete" onClick={this.deletePlayer.bind(this, currentPlayer[key].id)}>Delete </div>
+                        </div>
+                        <Modal open={open} onClose={this.onCloseModal}>
+                            <form>
+                                {console.log(currentPlayer[key].id)}
+                                <div className="form-group">
+                                    <label>Player Name</label>
+                                    <input type="text" className="form-control" id="player-edit-name-input" placeholder="Enter Name" onChange={this.updateName.bind(this)}/>
+                                </div>
+                                <div className="form-group">
+                                    <label>Country</label>
+                                    <input type="text" className="form-control" id="player-edit-country-input" placeholder="Enter Country" onChange={this.updateCountry.bind(this)}/>
+                                </div>
+                                <div className="form-group">
+                                    <label>Runs</label>
+                                    <input type="text" className="form-control" id="player-edit-runs-input" placeholder="Enter Runs" onChange={this.updateRuns.bind(this)}/>
+                                </div>
+                                <div className="form-group">
+                                    <label>Wickets</label>
+                                    <input type="text" className="form-control" id="player-edit-wickets-input" placeholder="Enter Wickets" onChange={this.updateWickets.bind(this)}/>
+                                </div>
+                                <div className="form-group">
+                                    <label>Catches</label>
+                                    <input type="text" className="form-control" id="player-edit-catches-input" placeholder="Enter Catches" onChange={this.updateCatches.bind(this)}/>
+                                </div>
+                                <button 
+                                    type="button" 
+                                    className="btn" 
+                                    onClick={
+                                        this.updatePlayer.bind(this, index)
+                                    }
+                                        >
+                                    Save
+                                </button>
+                            </form>
+                        </Modal>
+                        </div>                    
+                    </div>
                 </div>
-                <div className="row player-img">
-                    <img src={currentPlayer.url}/>
-                </div>
+                ))
+              }
                 
-                <div className="row player-done-button">
-                    <div className="btn btn-primary btn-action" onClick={this.onOpenModal}>Edit </div>
-                    <div className="btn btn-primary btn-action" onClick={this.deletePlayer.bind(this, currentPlayer.id)}>Delete </div>
-                </div>
-                <Modal open={open} onClose={this.onCloseModal}>
-                    <form>
-                        <div className="form-group">
-                            <label>Player Name</label>
-                            <input type="text" className="form-control" id="player-edit-name-input" placeholder="Enter Name"/>
-                        </div>
-                        <div className="form-group">
-                            <label>Country</label>
-                            <input type="text" className="form-control" id="player-edit-country-input" placeholder="Enter Country"/>
-                        </div>
-                        <div className="form-group">
-                            <label>Runs</label>
-                            <input type="text" className="form-control" id="player-edit-runs-input" placeholder="Enter Runs"/>
-                        </div>
-                        <div className="form-group">
-                            <label>Wickets</label>
-                            <input type="text" className="form-control" id="player-edit-wickets-input" placeholder="Enter Wickets"/>
-                        </div>
-                        <div className="form-group">
-                            <label>Catches</label>
-                            <input type="text" className="form-control" id="player-edit-catches-input" placeholder="Enter Catches"/>
-                        </div>
-                        <button type="button" className="btn" onClick={this.updatePlayer}>Save</button>
-                    </form>
-                </Modal>
             </div>
+			
 		);
     }
 
@@ -75,25 +109,33 @@ export default class PlayerDetail extends React.Component<IProps, IState> {
     private onCloseModal = () => {
 		this.setState({ open: false });
     };
+
+    private updateName = (e:any) => {
+        this.setState({ playerName: e.target.value });  
+        console.log(e.target.value)
+    }
+    private updateCountry = (e:any) => {
+		this.setState({ countryEdit: e.target.value });        
+    }
+    private updateRuns = (e:any) => {
+		this.setState({ runsEdit: e.target.value });        
+    }
+    private updateWickets = (e:any) => {
+		this.setState({ wicketsEdit: e.target.value });        
+    }
+    private updateCatches = (e:any) => {
+		this.setState({ catchesEdit: e.target.value });        
+    }
     
-    private updatePlayer(){
-        const nameInput = document.getElementById("player-edit-name-input") as HTMLInputElement
-        const countryInput = document.getElementById("player-edit-country-input") as HTMLInputElement
-        const runsInput = document.getElementById("player-edit-runs-input") as HTMLInputElement
-        const wicketsInput = document.getElementById("player-edit-wickets-input") as HTMLInputElement
-        const catchesInput = document.getElementById("player-edit-catches-input") as HTMLInputElement
-    
-        if (nameInput === null || countryInput === null || runsInput == null || wicketsInput == null || catchesInput == null) {
-			return;
-		}
-    
-        const currentPlayer = this.props.currentPlayer
+    private updatePlayer(index:any){
+        const currentPlayer = this.props.currentPlayer[index]
+        console.log(this.props.currentPlayer[index])
         const url = "https://cricketapi2018.azurewebsites.net/api/stats/" + currentPlayer.id
-        const updatedName = nameInput.value
-        const updatedCountry = countryInput.value
-        const updatedRuns = runsInput.value
-        const updatedWickets = wicketsInput.value
-        const updatedCatches = catchesInput.value
+        const updatedName = this.state.playerName
+        const updatedCountry = this.state.countryEdit
+        const updatedRuns = this.state.runsEdit
+        const updatedWickets = this.state.wicketsEdit
+        const updatedCatches = this.state.catchesEdit
         fetch(url, {
             body: JSON.stringify({
                 "name": updatedName,
@@ -112,6 +154,14 @@ export default class PlayerDetail extends React.Component<IProps, IState> {
                 // Error State
                 alert(response.statusText + " " + url)
             } else {
+                this.setState({
+                    playerId: 0,
+                    playerName: '',
+                    countryEdit: '',
+                    runsEdit: '',
+                    wicketsEdit: '',
+                    catchesEdit: '',
+                })
                 location.reload()
             }
         })
@@ -119,7 +169,6 @@ export default class PlayerDetail extends React.Component<IProps, IState> {
 
     private deletePlayer(id: any) {
         const url = "https://cricketapi2018.azurewebsites.net/api/stats/" + id
-    
         fetch(url, {
             method: 'DELETE'
         })
