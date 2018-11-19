@@ -152,40 +152,108 @@ class App extends React.Component<{}, IState> {
 		const runsInput = document.getElementById("player-runs-input") as HTMLInputElement
 		const wicketsInput = document.getElementById("player-wickets-input") as HTMLInputElement
 		const catchesInput = document.getElementById("player-catches-input") as HTMLInputElement
-		const imageFile = this.state.uploadFileList[0]
-	
-		if (nameInput === null || countryInput === null || runsInput == null || wicketsInput == null || catchesInput == null || imageFile === null) {
-			return;
-		}
-	
-		const name = nameInput.value
-		const country = countryInput.value
-		const runs = runsInput.value
-		const wickets = wicketsInput.value
-		const catches = catchesInput.value
-		const url = "https://cricketapi2018.azurewebsites.net/api/stats/upload"
-	
-		const formData = new FormData()
-		formData.append("Name", name)
-		formData.append("Country", country)
-		formData.append("Runs", runs)
-		formData.append("Wickets", wickets)
-		formData.append("Catches", catches)
-		formData.append("image", imageFile)
-	
-		fetch(url, {
-			body: formData,
-			headers: {'cache-control': 'no-cache'},
-			method: 'POST'
-		})
-		.then((response : any) => {
-			if (!response.ok) {
-				// Error State
-				alert(response.statusText)
-			} else {
-				location.reload()
+		
+		if(this.state.uploadFileList == null){
+			const name = nameInput.value
+			const country = countryInput.value
+			const runs = runsInput.value
+			const wickets = wicketsInput.value
+			const catches = catchesInput.value
+			const url = "https://cricketapi2018.azurewebsites.net/api/stats/upload"
+			if(name.trim() == ""){
+				alert("Please Enter a Name")
+				return;
 			}
-		})
+			if(country.trim() == ""){
+				alert("Please Enter a Country")
+				return;
+			}
+			if(runs.trim() == "" || isNaN(Number(runs.trim()))){
+				alert("Please Enter a Valid Amount of Runs")
+				return
+			}
+			if(wickets.trim() == "" || isNaN(Number(wickets.trim()))){
+				alert("Please Enter a Valid Amount of Wickets")
+				return
+			}
+			if(catches.trim() == "" || isNaN(Number(catches.trim()))){
+				alert("Please Enter a Valid Amount of Catches")
+				return
+			}
+		
+			const formData = new FormData()
+			formData.append("Name", name)
+			formData.append("Country", country)
+			formData.append("Runs", runs)
+			formData.append("Wickets", wickets)
+			formData.append("Catches", catches)
+		
+			fetch(url, {
+				body: formData,
+				headers: {'cache-control': 'no-cache'},
+				method: 'POST'
+			})
+			.then((response : any) => {
+				if (!response.ok) {
+					// Error State
+					alert(response.statusText)
+				} else {
+					location.reload()
+				}
+			})
+			console.log({nameInput})
+		} else {
+			const imageFile = this.state.uploadFileList[0]
+			const name = nameInput.value
+			const country = countryInput.value
+			const runs = runsInput.value
+			const wickets = wicketsInput.value
+			const catches = catchesInput.value
+			const url = "https://cricketapi2018.azurewebsites.net/api/stats/upload"
+
+			if(name.trim() == ""){
+				alert("Please Enter a Name")
+				return;
+			}
+			if(country.trim() == ""){
+				alert("Please Enter a Country")
+				return;
+			}
+			if(runs.trim() == "" || isNaN(Number(runs.trim()))){
+				alert("Please Enter a Valid Amount of Runs")
+				return
+			}
+			if(wickets.trim() == "" || isNaN(Number(wickets.trim()))){
+				alert("Please Enter a Valid Amount of Wickets")
+				return
+			}
+			if(catches.trim() == "" || isNaN(Number(catches.trim()))){
+				alert("Please Enter a Valid Amount of Catches")
+				return
+			}
+		
+			const formData = new FormData()
+			formData.append("Name", name)
+			formData.append("Country", country)
+			formData.append("Runs", runs)
+			formData.append("Wickets", wickets)
+			formData.append("Catches", catches)
+			formData.append("image", imageFile)
+		
+			fetch(url, {
+				body: formData,
+				headers: {'cache-control': 'no-cache'},
+				method: 'POST'
+			})
+			.then((response : any) => {
+				if (!response.ok) {
+					// Error State
+					alert(response.statusText)
+				} else {
+					location.reload()
+				}
+			})
+		}
 	}
 }
 

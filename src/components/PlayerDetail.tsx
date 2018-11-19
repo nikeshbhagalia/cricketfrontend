@@ -136,6 +136,26 @@ export default class PlayerDetail extends React.Component<IProps, IState> {
         const updatedRuns = this.state.runsEdit
         const updatedWickets = this.state.wicketsEdit
         const updatedCatches = this.state.catchesEdit
+        if(updatedName.trim() == ""){
+            alert("Please Enter a Name")
+            return;
+        }
+        if(updatedCountry.trim() == ""){
+            alert("Please Enter a Country")
+            return;
+        }
+        if(updatedRuns.trim() == "" || isNaN(Number(updatedRuns.trim()))){
+            alert("Please Enter a Valid Amount of Runs")
+            return
+        }
+        if(updatedWickets.trim() == "" || isNaN(Number(updatedWickets.trim()))){
+            alert("Please Enter a Valid Amount of Wickets")
+            return
+        }
+        if(updatedCatches.trim() == "" || isNaN(Number(updatedCatches.trim()))){
+            alert("Please Enter a Valid Amount of Catches")
+            return
+        }
         fetch(url, {
             body: JSON.stringify({
                 "name": updatedName,
