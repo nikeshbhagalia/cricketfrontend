@@ -26,12 +26,12 @@ export default class PlayerList extends React.Component<IProps, {}> {
                 <div className="row player-list-table">
                     <table className="table table-striped">
                         <tbody>
-                            <td>ID</td>
-                            <td>Name</td>
-                            <td>Country</td>
-                            <td>Runs</td>
-                            <td>Wickets</td>
-                            <td>Catches</td>
+                            <td><strong>ID</strong></td>
+                            <td><strong>Name</strong></td>
+                            <td><strong>Country</strong></td>
+                            <td><strong>Runs</strong></td>
+                            <td><strong>Wickets</strong></td>
+                            <td><strong>Catches</strong></td>
                             {this.createTable()}
                         </tbody>
                     </table>
