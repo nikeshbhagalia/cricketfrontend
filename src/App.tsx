@@ -122,12 +122,15 @@ class App extends React.Component<{}, IState> {
 	private fetchPlayers(name: any) {
 		let url = "http://cricketapi2018.azurewebsites.net/api/stats"
 		if (name !== "") {
-			url += "/name?=" + name
+			url += "/name/" + name
 		}
 		fetch(url, {
 			method: 'GET'
 		})
 		.then(res => res.json())
+		.catch( reason => {
+			// response is not a valid json string
+		})
 		.then(json => {
 			let currentPlayer = json
 			if (currentPlayer === undefined) {
