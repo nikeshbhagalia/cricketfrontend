@@ -4,6 +4,7 @@ import './App.css';
 import PlayerDetail from './components/PlayerDetail';
 import PlayerList from './components/PlayerList';
 import PatrickLogo from './patrick-logo.png';
+import * as Webcam from "react-webcam";
 
 
 interface IState {
@@ -12,6 +13,9 @@ interface IState {
 	open: boolean,
 	uploadFileList: any,
 	playerlist: boolean
+	authenticated: boolean,
+	refCamera: any,
+	predictionResult: any 
 }
 
 class App extends React.Component<{}, IState> {
@@ -23,18 +27,36 @@ class App extends React.Component<{}, IState> {
 			open: false,
 			uploadFileList: null,
 			playerlist: false,
+			authenticated: false,
+			refCamera: React.createRef(),
+			predictionResult: null
 		}     	
 		this.selectNewPlayer = this.selectNewPlayer.bind(this)
 		this.fetchPlayers = this.fetchPlayers.bind(this)
 		this.fetchPlayers("")
 		this.handleFileUpload = this.handleFileUpload.bind(this)
 		this.uploadPlayer = this.uploadPlayer.bind(this)
+		this.authenticate = this.authenticate.bind(this)
 	}
 
 	public render() {
-		const { open } = this.state;
+		const { open, authenticated } = this.state;
 		return (
 		<div>
+			<div>
+			{(!authenticated) ?
+				<Modal open={!authenticated} onClose={this.authenticate} closeOnOverlayClick={false} showCloseIcon={false} center={true}>
+					<div className="container header"></div>
+					<Webcam audio={false} screenshotFormat="image/jpeg" ref={this.state.refCamera} />
+					<div className="row nav-row">
+						<div className="btn btn-primary bottom-button" onClick={this.authenticate}>Login</div>
+						<div className="btn btn-primary bottom-button" >Skip</div>
+					</div>
+				</Modal> : ""}
+			</div>
+
+			{(authenticated) ?
+			<div>
 			<div className="header-wrapper">
 				<div className="container header">
 					<img src={PatrickLogo} height='40'/>&nbsp; CricStats &nbsp;
@@ -94,8 +116,51 @@ class App extends React.Component<{}, IState> {
 					<button type="button" className="btn" onClick={this.uploadPlayer}>Upload</button>
 				</form>
 			</Modal>
+			</div>
+		: ""}
 		</div>
 		);
+	}
+
+	// Call custom vision model
+	private getFaceRecognitionResult(image: string) {
+		const url = "https://southcentralus.api.cognitive.microsoft.com/customvision/v2.0/Prediction/74e6b183-ae3a-4e0a-8941-da2966a5dce1/image?iterationId=64eae297-feb1-472b-a843-1db6ee8e1090"
+		if (image === null) {
+			return;
+		}
+		const base64 = require('base64-js');
+		const base64content = image.split(";")[1].split(",")[1]
+		const byteArray = base64.toByteArray(base64content);
+		fetch(url, {
+			body: byteArray,
+			headers: {
+				'cache-control': 'no-cache', 'Prediction-Key': 'c09ded12dabb44e99c2022d755b59a9a', 'Content-Type': 'application/octet-stream'
+			},
+			method: 'POST'
+		})
+			.then((response: any) => {
+				if (!response.ok) {
+					// Error State
+					alert(response.statusText)
+				} else {
+					response.json().then((json: any) => {
+						console.log(json.predictions[0])
+						this.setState({predictionResult: json.predictions[0] })
+						if (this.state.predictionResult.probability > 0.0) {
+							this.setState({authenticated: true})
+						} else {
+							this.setState({authenticated: false})
+							
+						}
+					})
+				}
+			})
+	}
+
+	// Authenticate
+	private authenticate() {
+		const screenshot = this.state.refCamera.current.getScreenshot();
+		this.getFaceRecognitionResult(screenshot);
 	}
 
 	private togglelist = () => {
