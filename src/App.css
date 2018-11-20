@@ -1,28 +1,64 @@
 .App {
-  text-align: center;
+    text-align: center;
 }
 
 .App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 80px;
+    animation: App-logo-spin infinite 20s linear;
+    height: 80px;
 }
 
 .App-header {
-  background-color: #222;
-  height: 150px;
-  padding: 20px;
-  color: white;
+    background-color: #222;
+    height: 150px;
+    padding: 20px;
+    color: white;
+}
+
+.playerid {
+    color: #cb356b;
+    font-weight: 600;
+}
+
+video {
+    width: 100%;
+}
+
+.btn-primary {
+    margin-left: 15px;
+    font-family: Open Sans, sans-serif;
+    padding: 7px 35px;
+    border-radius: 20px;
+    background: linear-gradient(to right, #cb356b, #bd3f32);
+    color: white;
+}
+
+.login {
+    font-family: Open Sans, sans-serif !important;
+    font-size: 24px;
+    font-weight: normal;
 }
 
 .App-title {
-  font-size: 1.5em;
+    font-size: 1.5em;
 }
 
 .App-intro {
-  font-size: large;
+    font-size: large;
+}
+
+.background {
+    background-color: #333;
+}
+
+.table-striple {
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
 }
 
 @keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
 }

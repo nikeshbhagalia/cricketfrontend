@@ -15,7 +15,8 @@ interface IState {
 	playerlist: boolean
 	authenticated: boolean,
 	refCamera: any,
-	predictionResult: any 
+	predictionResult: any,
+	skip: boolean
 }
 
 class App extends React.Component<{}, IState> {
@@ -29,7 +30,8 @@ class App extends React.Component<{}, IState> {
 			playerlist: false,
 			authenticated: false,
 			refCamera: React.createRef(),
-			predictionResult: null
+			predictionResult: null,
+			skip: false
 		}     	
 		this.selectNewPlayer = this.selectNewPlayer.bind(this)
 		this.fetchPlayers = this.fetchPlayers.bind(this)
@@ -37,87 +39,96 @@ class App extends React.Component<{}, IState> {
 		this.handleFileUpload = this.handleFileUpload.bind(this)
 		this.uploadPlayer = this.uploadPlayer.bind(this)
 		this.authenticate = this.authenticate.bind(this)
+		this.clearss = this.clearss.bind(this)
 	}
 
 	public render() {
 		const { open, authenticated } = this.state;
+		const checkSession = sessionStorage.getItem('key');
+		console.log(checkSession)
 		return (
 		<div>
 			<div>
-			{(!authenticated) ?
+			<div className="header-wrapper">
+					<div className="container header">
+						<img src={PatrickLogo} height='40'/>&nbsp; CricStats &nbsp;
+						{
+							!this.state.skip &&
+								<div id="bt" className="btn btn-primary btn-action btn-add" onClick={this.onOpenModal}>Add Player</div> &&
+								<div id="bt" className="btn btn-primary btn-action btn-add" onClick={this.clearss}>Logout</div>
+						}
+					</div>
+				</div>
+			{(!authenticated && checkSession !== "authenticated") ?
 				<Modal open={!authenticated} onClose={this.authenticate} closeOnOverlayClick={false} showCloseIcon={false} center={true}>
-					<div className="container header"></div>
+					<div className="container header login">
+						Login
+					</div>
 					<Webcam audio={false} screenshotFormat="image/jpeg" ref={this.state.refCamera} />
 					<div className="row nav-row">
 						<div className="btn btn-primary bottom-button" onClick={this.authenticate}>Login</div>
-						<div className="btn btn-primary bottom-button" >Skip</div>
+						<div className="btn btn-primary bottom-button" onClick={this.skip}>Skip</div>
 					</div>
-				</Modal> : ""}
-			</div>
-
-			{(authenticated) ?
-			<div>
-			<div className="header-wrapper">
-				<div className="container header">
-					<img src={PatrickLogo} height='40'/>&nbsp; CricStats &nbsp;
-					<div className="btn btn-primary btn-action btn-add" onClick={this.onOpenModal}>Add Player</div>
-				</div>
-			</div>
-			<div className="container">
-				<div className="row top-padding">
-					<div 
-						className="playerlist"
-						onClick={this.togglelist}
-					>
-					{
-						!this.state.playerlist ?
-						<span>Player List</span>
-						:
-						<span>Players</span>
-					}
-					</div>
-					<div className="col-lg-12">
-					{
-						!this.state.playerlist ?
-						<PlayerDetail currentPlayer={this.state.currentPlayer}/>
-						:
-						<PlayerList players={this.state.players} selectNewPlayer={this.selectNewPlayer} searchByName={this.fetchPlayers}/>
-					}
+				</Modal> : 
+				<div>
+				<div className="background">
+					<div className="container">
+						<div className="row top-padding">
+							<div 
+								className="playerlist"
+								onClick={this.togglelist}
+							>
+							{
+								!this.state.playerlist ?
+								<span>Player List</span>
+								:
+								<span>Players</span>
+							}
+							</div>
+							<div className="col-lg-12">
+							{
+								!this.state.playerlist ?
+								<PlayerDetail currentPlayer={this.state.currentPlayer} skip={this.state.skip} />
+								:
+								<PlayerList players={this.state.players} selectNewPlayer={this.selectNewPlayer} searchByName={this.fetchPlayers}/>
+							}
+							</div>
+						</div>
 					</div>
 				</div>
-			</div>
-			<Modal open={open} onClose={this.onCloseModal}>
-				<form>
-				<div className="form-group">
-                            <label>Player Name</label>
-                            <input type="text" className="form-control" id="player-name-input" placeholder="Enter Name"/>
-                        </div>
-                        <div className="form-group">
-                            <label>Country</label>
-                            <input type="text" className="form-control" id="player-country-input" placeholder="Enter Country"/>
-                        </div>
-                        <div className="form-group">
-                            <label>Runs</label>
-                            <input type="text" className="form-control" id="player-runs-input" placeholder="Enter Runs"/>
-                        </div>
-                        <div className="form-group">
-                            <label>Wickets</label>
-                            <input type="text" className="form-control" id="player-wickets-input" placeholder="Enter Wickets"/>
-                        </div>
-                        <div className="form-group">
-                            <label>Catches</label>
-                            <input type="text" className="form-control" id="player-catches-input" placeholder="Enter Catches"/>
-                        </div>
+				<Modal open={open} onClose={this.onCloseModal}>
+					<form>
 					<div className="form-group">
-						<label>Image</label>
-						<input type="file" onChange={this.handleFileUpload} className="form-control-file" id="player-image-input" />
-					</div>
-
-					<button type="button" className="btn" onClick={this.uploadPlayer}>Upload</button>
-				</form>
-			</Modal>
+								<label>Player Name</label>
+								<input type="text" className="form-control" id="player-name-input" placeholder="Enter Name"/>
+							</div>
+							<div className="form-group">
+								<label>Country</label>
+								<input type="text" className="form-control" id="player-country-input" placeholder="Enter Country"/>
+							</div>
+							<div className="form-group">
+								<label>Runs</label>
+								<input type="text" className="form-control" id="player-runs-input" placeholder="Enter Runs"/>
+							</div>
+							<div className="form-group">
+								<label>Wickets</label>
+								<input type="text" className="form-control" id="player-wickets-input" placeholder="Enter Wickets"/>
+							</div>
+							<div className="form-group">
+								<label>Catches</label>
+								<input type="text" className="form-control" id="player-catches-input" placeholder="Enter Catches"/>
+							</div>
+						<div className="form-group">
+							<label>Image</label>
+							<input type="file" onChange={this.handleFileUpload} className="form-control-file" id="player-image-input" />
+						</div>
+	
+						<button type="button" className="btn" onClick={this.uploadPlayer}>Upload</button>
+					</form>
+				</Modal>
+				</div>
+			}
 			</div>
-		: ""}
 		</div>
 		);
 	}
@@ -147,6 +158,7 @@ class App extends React.Component<{}, IState> {
 						console.log(json.predictions[0])
 						this.setState({predictionResult: json.predictions[0] })
 						if (this.state.predictionResult.probability > 0.0) {
+							sessionStorage.setItem('key', 'authenticated');
 							this.setState({authenticated: true})
 						} else {
 							this.setState({authenticated: false})
@@ -163,13 +175,27 @@ class App extends React.Component<{}, IState> {
 		this.getFaceRecognitionResult(screenshot);
 	}
 
+	private clearss() {
+		sessionStorage.clear();
+		location.reload();
+	}
+
+	private skip = () => {
+		this.setState({ 
+			authenticated: true,
+			skip: true
+		});
+	}
+
 	private togglelist = () => {
 		this.setState({ playerlist: !this.state.playerlist})
 	}
 
 	// Modal open
 	private onOpenModal = () => {
-		this.setState({ open: true });
+		this.setState({ 
+			open: true,
+		});
 	  };
 	
 	// Modal close
@@ -215,6 +241,8 @@ class App extends React.Component<{}, IState> {
 	}
 
 	private uploadPlayer() {
+		this.setState({playerlist: false,
+		})
 		const nameInput = document.getElementById("player-name-input") as HTMLInputElement
 		const countryInput = document.getElementById("player-country-input") as HTMLInputElement
 		const runsInput = document.getElementById("player-runs-input") as HTMLInputElement

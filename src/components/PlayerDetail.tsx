@@ -2,7 +2,8 @@ import * as React from "react";
 import Modal from 'react-responsive-modal';
 
 interface IProps {
-    currentPlayer: any
+    currentPlayer: any,
+    skip: boolean
 }
 
 interface IState {
@@ -35,6 +36,7 @@ export default class PlayerDetail extends React.Component<IProps, IState> {
 
 	public render() {
         const currentPlayer = this.props.currentPlayer
+        const skip = this.props.skip
         const { open } = this.state;
 		return (
             <div className="row odd-even">
@@ -51,10 +53,14 @@ export default class PlayerDetail extends React.Component<IProps, IState> {
                         <p>Runs: <span>{currentPlayer[key].runs}</span></p>
                         <p>Wickets: <span>{currentPlayer[key].wickets}</span></p>
                         <p>Catches: <span>{currentPlayer[key].catches}</span></p>
-                        <div className="player-done-button">
-                            <div className="btn-custom" onClick={this.onOpenModal}>Edit </div>
-                            <div className="btn-custom delete" onClick={this.deletePlayer.bind(this, currentPlayer[key].id)}>Delete </div>
-                        </div>
+                        {
+                            !skip &&
+                            <div className="player-done-button">
+                                <div className="btn-custom" onClick={this.onOpenModal}>Edit </div>
+                                <div className="btn-custom delete" onClick={this.deletePlayer.bind(this, currentPlayer[key].id)}>Delete </div>
+                            </div>
+                        }
+                        
                         <Modal open={open} onClose={this.onCloseModal}>
                             <form>
                                 {console.log(currentPlayer[key].id)}
