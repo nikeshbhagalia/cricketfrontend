@@ -52,10 +52,10 @@ class App extends React.Component<{}, IState> {
 			<div className="header-wrapper">
 					<div className="container header">
 						<img src={PatrickLogo} height='40'/>&nbsp; CricStats &nbsp;
+						{authenticated && <div id="bt" className="btn btn-primary btn-action btn-add" onClick={this.clearss}>Logout</div>}
 						{
 							!this.state.skip &&
-								<div id="bt" className="btn btn-primary btn-action btn-add" onClick={this.onOpenModal}>Add Player</div> &&
-								<div id="bt" className="btn btn-primary btn-action btn-add" onClick={this.clearss}>Logout</div>
+								<div id="bt" className="btn btn-primary btn-action btn-add" onClick={this.onOpenModal}>Add Player</div>
 						}
 					</div>
 				</div>
