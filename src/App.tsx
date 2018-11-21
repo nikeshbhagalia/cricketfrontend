@@ -6,7 +6,6 @@ import PlayerList from './components/PlayerList';
 import PatrickLogo from './patrick-logo.png';
 import * as Webcam from "react-webcam";
 
-
 interface IState {
 	currentPlayer: any,
 	players: any[],
@@ -16,14 +15,15 @@ interface IState {
 	authenticated: boolean,
 	refCamera: any,
 	predictionResult: any,
-	skip: boolean
+	skip: boolean,
+	hamburgerShow: boolean
 }
 
 class App extends React.Component<{}, IState> {
 	constructor(props: any) {
-        super(props)
-        this.state = {
-			currentPlayer: {"id":0, "name":"Loading ","url":"","country":"","runs":"","wickets":"","catches":"0"},
+		super(props)
+		this.state = {
+			currentPlayer: { "id": 0, "name": "Loading ", "url": "", "country": "", "runs": "", "wickets": "", "catches": "0" },
 			players: [],
 			open: false,
 			uploadFileList: null,
@@ -31,8 +31,9 @@ class App extends React.Component<{}, IState> {
 			authenticated: false,
 			refCamera: React.createRef(),
 			predictionResult: null,
-			skip: false
-		}     	
+			skip: false,
+			hamburgerShow: false
+		}
 		this.selectNewPlayer = this.selectNewPlayer.bind(this)
 		this.fetchPlayers = this.fetchPlayers.bind(this)
 		this.fetchPlayers("")
@@ -43,94 +44,113 @@ class App extends React.Component<{}, IState> {
 	}
 
 	public render() {
-		const { open, authenticated } = this.state;
+		const { open, authenticated, hamburgerShow } = this.state;
 		const checkSession = sessionStorage.getItem('key');
 		console.log(checkSession)
 		return (
-		<div>
 			<div>
-			<div className="header-wrapper">
-					<div className="container header">
-						<img src={PatrickLogo} height='40'/>&nbsp; CricStats &nbsp;
-						{(authenticated || checkSession == "authenticated") && <div id="bt" className="btn btn-primary btn-action btn-add" onClick={this.clearss}>Logout</div>}
-						{
-							(!this.state.skip && (authenticated || checkSession == "authenticated")) &&
-								<div id="bt" className="btn btn-primary btn-action btn-add" onClick={this.onOpenModal}>Add Player</div>
-						}
-						{(authenticated || checkSession == "authenticated") && <iframe src="https://www.facebook.com/plugins/share_button.php?href=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&layout=button&size=large&mobile_iframe=true&appId=1488164671254990&width=73&height=28" width="106" height="28" scrolling="no" frameBorder="0" allow="encrypted-media"></iframe>}
+				<div>
+					<div className="header-wrapper">
+						<div className="container header">
+							<img src={PatrickLogo} height='40' />&nbsp; CricStats &nbsp;
+							<div className="hamburger" onClick={this.toggleHamburger}>
+								<div className="bar1"></div>
+								<div className="bar2"></div>
+								<div className="bar3"></div>
+							</div>
+							{
+								hamburgerShow &&
+								<div className="hamburger-show">
+								<div className="hamburger-relative">
+									<div className="cross" onClick={this.toggleHamburger}>x</div>
+									{(authenticated || checkSession == "authenticated") && <div id="bt" className="btn btn-primary btn-action btn-add" onClick={this.clearss}>Logout</div>}
+									{
+										(!this.state.skip && (authenticated || checkSession == "authenticated")) &&
+										<div id="bt" className="btn btn-primary btn-action btn-add" onClick={this.onOpenModal}>Add Player</div>
+									}
+									{(authenticated || checkSession == "authenticated") && <iframe src="https://www.facebook.com/plugins/share_button.php?href=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&layout=button&size=large&mobile_iframe=true&appId=1488164671254990&width=73&height=28" width="106" height="28" scrolling="no" frameBorder="0" allow="encrypted-media"></iframe>}
+									</div>
+								</div>
+							}
+							{(authenticated || checkSession == "authenticated") && <div id="bt" className="btn btn-primary btn-action btn-add mob" onClick={this.clearss}>Logout</div>}
+							{
+								(!this.state.skip && (authenticated || checkSession == "authenticated")) &&
+								<div id="bt" className="btn btn-primary btn-action btn-add mob" onClick={this.onOpenModal}>Add Player</div>
+							}
+							{(authenticated || checkSession == "authenticated") && <iframe src="https://www.facebook.com/plugins/share_button.php?href=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&layout=button&size=large&mobile_iframe=true&appId=1488164671254990&width=73&height=28" width="106" height="28" scrolling="no" frameBorder="0" allow="encrypted-media" className="mob"></iframe>}
+						</div>
 					</div>
-				</div>
-			{(!authenticated && checkSession !== "authenticated") ?
-				<Modal open={!authenticated} onClose={this.authenticate} closeOnOverlayClick={false} showCloseIcon={false} center={true}>
-					<div className="container header login">
-						Login
+					{(!authenticated && checkSession !== "authenticated") ?
+						<Modal open={!authenticated} onClose={this.authenticate} closeOnOverlayClick={false} showCloseIcon={false} center={true}>
+							<div className="container header login">
+								Login
 					</div>
 					<Webcam audio={false} screenshotFormat="image/jpeg" ref={this.state.refCamera} />
-					<div className="row nav-row">
-						<div className="btn btn-primary bottom-button" onClick={this.authenticate}>Login</div>
-						<div className="btn btn-primary bottom-button" onClick={this.skip}>Skip</div>
-					</div>
-				</Modal> : 
-				<div>
-				<div className="background">
-					<div className="container">
-						<div className="row top-padding">
-							<div 
-								className="playerlist"
-								onClick={this.togglelist}
-							>
-							{
-								!this.state.playerlist ?
-								<span>Player List</span>
-								:
-								<span>Players</span>
-							}
+							<div className="row nav-row">
+								<div className="btn btn-primary bottom-button" onClick={this.authenticate}>Login</div>
+								<div className="btn btn-primary bottom-button" onClick={this.skip}>Skip</div>
 							</div>
-							<div className="col-lg-12">
-							{
-								!this.state.playerlist ?
-								<PlayerDetail currentPlayer={this.state.currentPlayer} skip={this.state.skip} />
-								:
-								<PlayerList players={this.state.players} selectNewPlayer={this.selectNewPlayer} searchByName={this.fetchPlayers}/>
-							}
+						</Modal> :
+						<div>
+							<div className="background">
+								<div className="container">
+									<div className="row top-padding">
+										<div
+											className="playerlist"
+											onClick={this.togglelist}
+										>
+											{
+												!this.state.playerlist ?
+													<span>Player List</span>
+													:
+													<span>Players</span>
+											}
+										</div>
+										<div className="col-lg-12">
+											{
+												!this.state.playerlist ?
+													<PlayerDetail currentPlayer={this.state.currentPlayer} skip={this.state.skip} />
+													:
+													<PlayerList players={this.state.players} selectNewPlayer={this.selectNewPlayer} searchByName={this.fetchPlayers} />
+											}
+										</div>
+									</div>
+								</div>
 							</div>
+							<Modal open={open} onClose={this.onCloseModal}>
+								<form>
+									<div className="form-group">
+										<label>Player Name</label>
+										<input type="text" className="form-control" id="player-name-input" placeholder="Enter Name" />
+									</div>
+									<div className="form-group">
+										<label>Country</label>
+										<input type="text" className="form-control" id="player-country-input" placeholder="Enter Country" />
+									</div>
+									<div className="form-group">
+										<label>Runs</label>
+										<input type="text" className="form-control" id="player-runs-input" placeholder="Enter Runs" />
+									</div>
+									<div className="form-group">
+										<label>Wickets</label>
+										<input type="text" className="form-control" id="player-wickets-input" placeholder="Enter Wickets" />
+									</div>
+									<div className="form-group">
+										<label>Catches</label>
+										<input type="text" className="form-control" id="player-catches-input" placeholder="Enter Catches" />
+									</div>
+									<div className="form-group">
+										<label>Image</label>
+										<input type="file" onChange={this.handleFileUpload} className="form-control-file" id="player-image-input" />
+									</div>
+
+									<button type="button" className="btn" onClick={this.uploadPlayer}>Upload</button>
+								</form>
+							</Modal>
 						</div>
-					</div>
+					}
 				</div>
-				<Modal open={open} onClose={this.onCloseModal}>
-					<form>
-					<div className="form-group">
-								<label>Player Name</label>
-								<input type="text" className="form-control" id="player-name-input" placeholder="Enter Name"/>
-							</div>
-							<div className="form-group">
-								<label>Country</label>
-								<input type="text" className="form-control" id="player-country-input" placeholder="Enter Country"/>
-							</div>
-							<div className="form-group">
-								<label>Runs</label>
-								<input type="text" className="form-control" id="player-runs-input" placeholder="Enter Runs"/>
-							</div>
-							<div className="form-group">
-								<label>Wickets</label>
-								<input type="text" className="form-control" id="player-wickets-input" placeholder="Enter Wickets"/>
-							</div>
-							<div className="form-group">
-								<label>Catches</label>
-								<input type="text" className="form-control" id="player-catches-input" placeholder="Enter Catches"/>
-							</div>
-						<div className="form-group">
-							<label>Image</label>
-							<input type="file" onChange={this.handleFileUpload} className="form-control-file" id="player-image-input" />
-						</div>
-	
-						<button type="button" className="btn" onClick={this.uploadPlayer}>Upload</button>
-					</form>
-				</Modal>
-				</div>
-			}
 			</div>
-		</div>
 		);
 	}
 
@@ -157,13 +177,13 @@ class App extends React.Component<{}, IState> {
 				} else {
 					response.json().then((json: any) => {
 						console.log(json.predictions[0])
-						this.setState({predictionResult: json.predictions[0] })
+						this.setState({ predictionResult: json.predictions[0] })
 						if (this.state.predictionResult.probability > 0.0) {
 							sessionStorage.setItem('key', 'authenticated');
-							this.setState({authenticated: true})
+							this.setState({ authenticated: true })
 						} else {
-							this.setState({authenticated: false})
-							
+							this.setState({ authenticated: false })
+
 						}
 					})
 				}
@@ -182,28 +202,34 @@ class App extends React.Component<{}, IState> {
 	}
 
 	private skip = () => {
-		this.setState({ 
+		this.setState({
 			authenticated: true,
 			skip: true
 		});
 	}
 
+	private toggleHamburger = () => {
+		this.setState({
+			hamburgerShow: !this.state.hamburgerShow
+		})
+	}
+
 	private togglelist = () => {
-		this.setState({ playerlist: !this.state.playerlist})
+		this.setState({ playerlist: !this.state.playerlist })
 	}
 
 	// Modal open
 	private onOpenModal = () => {
-		this.setState({ 
+		this.setState({
 			open: true,
 		});
-	  };
-	
+	};
+
 	// Modal close
 	private onCloseModal = () => {
 		this.setState({ open: false });
 	};
-	
+
 	// Change selected meme
 	private selectNewPlayer(newPlayer: any) {
 		this.setState({
@@ -219,20 +245,20 @@ class App extends React.Component<{}, IState> {
 		fetch(url, {
 			method: 'GET'
 		})
-		.then(res => res.json())
-		.catch( reason => {
-			// response is not a valid json string
-		})
-		.then(json => {
-			let currentPlayer = json
-			if (currentPlayer === undefined) {
-				currentPlayer = {"id":0, "name":"No Players with that Name ","url":"","country":"","runs":"","wickets":"","catches":""}
-			}
-			this.setState({
-				currentPlayer,
-				players: json
+			.then(res => res.json())
+			.catch(reason => {
+				// response is not a valid json string
 			})
-		});
+			.then(json => {
+				let currentPlayer = json
+				if (currentPlayer === undefined) {
+					currentPlayer = { "id": 0, "name": "No Players with that Name ", "url": "", "country": "", "runs": "", "wickets": "", "catches": "" }
+				}
+				this.setState({
+					currentPlayer,
+					players: json
+				})
+			});
 	}
 
 	private handleFileUpload(fileList: any) {
@@ -242,63 +268,64 @@ class App extends React.Component<{}, IState> {
 	}
 
 	private uploadPlayer() {
-		this.setState({playerlist: false,
+		this.setState({
+			playerlist: false,
 		})
 		const nameInput = document.getElementById("player-name-input") as HTMLInputElement
 		const countryInput = document.getElementById("player-country-input") as HTMLInputElement
 		const runsInput = document.getElementById("player-runs-input") as HTMLInputElement
 		const wicketsInput = document.getElementById("player-wickets-input") as HTMLInputElement
 		const catchesInput = document.getElementById("player-catches-input") as HTMLInputElement
-		
-		if(this.state.uploadFileList == null){
+
+		if (this.state.uploadFileList == null) {
 			const name = nameInput.value
 			const country = countryInput.value
 			const runs = runsInput.value
 			const wickets = wicketsInput.value
 			const catches = catchesInput.value
 			const url = "https://cricketapi2018.azurewebsites.net/api/stats/upload"
-			if(name.trim() == ""){
+			if (name.trim() == "") {
 				alert("Please Enter a Name")
 				return;
 			}
-			if(country.trim() == ""){
+			if (country.trim() == "") {
 				alert("Please Enter a Country")
 				return;
 			}
-			if(runs.trim() == "" || isNaN(Number(runs.trim()))){
+			if (runs.trim() == "" || isNaN(Number(runs.trim()))) {
 				alert("Please Enter a Valid Amount of Runs")
 				return
 			}
-			if(wickets.trim() == "" || isNaN(Number(wickets.trim()))){
+			if (wickets.trim() == "" || isNaN(Number(wickets.trim()))) {
 				alert("Please Enter a Valid Amount of Wickets")
 				return
 			}
-			if(catches.trim() == "" || isNaN(Number(catches.trim()))){
+			if (catches.trim() == "" || isNaN(Number(catches.trim()))) {
 				alert("Please Enter a Valid Amount of Catches")
 				return
 			}
-		
+
 			const formData = new FormData()
 			formData.append("Name", name)
 			formData.append("Country", country)
 			formData.append("Runs", runs)
 			formData.append("Wickets", wickets)
 			formData.append("Catches", catches)
-		
+
 			fetch(url, {
 				body: formData,
-				headers: {'cache-control': 'no-cache'},
+				headers: { 'cache-control': 'no-cache' },
 				method: 'POST'
 			})
-			.then((response : any) => {
-				if (!response.ok) {
-					// Error State
-					alert(response.statusText)
-				} else {
-					location.reload()
-				}
-			})
-			console.log({nameInput})
+				.then((response: any) => {
+					if (!response.ok) {
+						// Error State
+						alert(response.statusText)
+					} else {
+						location.reload()
+					}
+				})
+			console.log({ nameInput })
 		} else {
 			const imageFile = this.state.uploadFileList[0]
 			const name = nameInput.value
@@ -308,27 +335,27 @@ class App extends React.Component<{}, IState> {
 			const catches = catchesInput.value
 			const url = "https://cricketapi2018.azurewebsites.net/api/stats/upload"
 
-			if(name.trim() == ""){
+			if (name.trim() == "") {
 				alert("Please Enter a Name")
 				return;
 			}
-			if(country.trim() == ""){
+			if (country.trim() == "") {
 				alert("Please Enter a Country")
 				return;
 			}
-			if(runs.trim() == "" || isNaN(Number(runs.trim()))){
+			if (runs.trim() == "" || isNaN(Number(runs.trim()))) {
 				alert("Please Enter a Valid Amount of Runs")
 				return
 			}
-			if(wickets.trim() == "" || isNaN(Number(wickets.trim()))){
+			if (wickets.trim() == "" || isNaN(Number(wickets.trim()))) {
 				alert("Please Enter a Valid Amount of Wickets")
 				return
 			}
-			if(catches.trim() == "" || isNaN(Number(catches.trim()))){
+			if (catches.trim() == "" || isNaN(Number(catches.trim()))) {
 				alert("Please Enter a Valid Amount of Catches")
 				return
 			}
-		
+
 			const formData = new FormData()
 			formData.append("Name", name)
 			formData.append("Country", country)
@@ -336,20 +363,20 @@ class App extends React.Component<{}, IState> {
 			formData.append("Wickets", wickets)
 			formData.append("Catches", catches)
 			formData.append("image", imageFile)
-		
+
 			fetch(url, {
 				body: formData,
-				headers: {'cache-control': 'no-cache'},
+				headers: { 'cache-control': 'no-cache' },
 				method: 'POST'
 			})
-			.then((response : any) => {
-				if (!response.ok) {
-					// Error State
-					alert(response.statusText)
-				} else {
-					location.reload()
-				}
-			})
+				.then((response: any) => {
+					if (!response.ok) {
+						// Error State
+						alert(response.statusText)
+					} else {
+						location.reload()
+					}
+				})
 		}
 	}
 }
