@@ -11,6 +11,7 @@ export default class PlayerList extends React.Component<IProps, {}> {
     constructor(props: any) {
         super(props)   
         this.searchByName = this.searchByName.bind(this)
+        this.searchNameByVoice = this.searchNameByVoice.bind(this)
     }
 
 	public render() {
@@ -19,8 +20,8 @@ export default class PlayerList extends React.Component<IProps, {}> {
                 <div className="row player-list-heading">
                     <div className="input-group">
                         <input type="text" id="search-name-textbox" className="form-control" placeholder="Search By Name" />
-                        <div className="btn" onClick={this.searchNameByVoice}><i className="fa fa-microphone" /></div>
                         <div className="input-group-append">
+                            <div className="btn" onClick={this.searchNameByVoice}><i className="fa fa-microphone" /></div>
                             <div className="btn btn-outline-secondary search-button" onClick = {this.searchByName}>Search</div>
                         </div>
                     </div>  
@@ -95,12 +96,12 @@ export default class PlayerList extends React.Component<IProps, {}> {
             }
             mediaRecorder.start(3000);
         }
-    
+        navigator.mediaDevices.getUserMedia(mediaConstraints)
         navigator.getUserMedia(mediaConstraints, onMediaSuccess, onMediaError)
     
         function onMediaError(e: any) {
             console.error('media error', e);
-        }  
+        }
     }
 
     private postAudio(blob : any) {
@@ -113,7 +114,7 @@ export default class PlayerList extends React.Component<IProps, {}> {
             },
             method: 'POST'
         }).then((response) => {
-            console.log(response.text())
+            // console.log(response.text())
             return response.text()
         }).then((response) => {
             console.log(response)
@@ -123,19 +124,21 @@ export default class PlayerList extends React.Component<IProps, {}> {
         });
     
         // posting audio
-        fetch('https://westus.api.cognitive.microsoft.com/sts/v1.0', {
+        fetch('https://westus.stt.speech.microsoft.com/speech/recognition/conversation/cognitiveservices/v1?language=en-US', {
             body: blob, // this is a .wav audio file    
             headers: {
                 'Accept': 'application/json',
                 'Authorization': 'Bearer' + accessToken,
                 'Content-Type': 'audio/wav;codec=audio/pcm; samplerate=16000',
-                'Ocp-Apim-Subscription-Key': '4d3d4b2bc7a04f96b60585b1610a7fc7'
+                'Ocp-Apim-Subscription-Key': 'b93f4ea4fc954fe1a609e88d4fc07ac2'
             },    
             method: 'POST'
         }).then((res) => {
             return res.json()
         }).then((res: any) => {
             console.log(res)
+            const textBox = document.getElementById("search-name-textbox") as HTMLInputElement
+            textBox.value = (res.DisplayText as string).slice(0, -1)
         }).catch((error) => {
             console.log("Error", error)
         });

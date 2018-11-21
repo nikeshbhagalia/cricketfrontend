@@ -70,6 +70,18 @@ html {
     float: right;
 }
 
+.btn {
+    /*color: white;*/
+    background-color: white;
+    border-top: 1px solid #ced4da;
+    border-bottom: 1px solid #ced4da;
+}
+
+.fa-microphone {
+    margin-top: 7px;
+    font-size: 25px;
+}
+
 .bar1,
 .bar2,
 .bar3 {

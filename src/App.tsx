@@ -63,24 +63,24 @@ class App extends React.Component<{}, IState> {
 								<div className="hamburger-show">
 								<div className="hamburger-relative">
 									<div className="cross" onClick={this.toggleHamburger}>x</div>
-									{(authenticated || checkSession == "authenticated") && <div id="bt" className="btn btn-primary btn-action btn-add" onClick={this.clearss}>Logout</div>}
+									{(authenticated || checkSession == "authenticated" || checkSession == "skip") && <div id="bt" className="btn btn-primary btn-action btn-add" onClick={this.clearss}>Logout</div>}
 									{
 										(!this.state.skip && (authenticated || checkSession == "authenticated")) &&
 										<div id="bt" className="btn btn-primary btn-action btn-add" onClick={this.onOpenModal}>Add Player</div>
 									}
-									{(authenticated || checkSession == "authenticated") && <iframe src="https://www.facebook.com/plugins/share_button.php?href=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&layout=button&size=large&mobile_iframe=true&appId=1488164671254990&width=73&height=28" width="106" height="28" scrolling="no" frameBorder="0" allow="encrypted-media"></iframe>}
+									{(authenticated || checkSession == "authenticated" || checkSession == "skip") && <iframe src="https://www.facebook.com/plugins/share_button.php?href=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&layout=button&size=large&mobile_iframe=true&appId=1488164671254990&width=73&height=28" width="106" height="28" scrolling="no" frameBorder="0" allow="encrypted-media"></iframe>}
 									</div>
 								</div>
 							}
-							{(authenticated || checkSession == "authenticated") && <div id="bt" className="btn btn-primary btn-action btn-add mob" onClick={this.clearss}>Logout</div>}
+							{(authenticated || checkSession == "authenticated" || checkSession == "skip") && <div id="bt" className="btn btn-primary btn-action btn-add mob" onClick={this.clearss}>Logout</div>}
 							{
 								(!this.state.skip && (authenticated || checkSession == "authenticated")) &&
 								<div id="bt" className="btn btn-primary btn-action btn-add mob" onClick={this.onOpenModal}>Add Player</div>
 							}
-							{(authenticated || checkSession == "authenticated") && <iframe src="https://www.facebook.com/plugins/share_button.php?href=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&layout=button&size=large&mobile_iframe=true&appId=1488164671254990&width=73&height=28" width="106" height="28" scrolling="no" frameBorder="0" allow="encrypted-media" className="mob"></iframe>}
+							{(authenticated || checkSession == "authenticated" || checkSession == "skip") && <iframe src="https://www.facebook.com/plugins/share_button.php?href=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&layout=button&size=large&mobile_iframe=true&appId=1488164671254990&width=73&height=28" width="106" height="28" scrolling="no" frameBorder="0" allow="encrypted-media" className="mob"></iframe>}
 						</div>
 					</div>
-					{(!authenticated && checkSession !== "authenticated") ?
+					{(!authenticated && checkSession !== "authenticated" && checkSession !== "skip") ?
 						<Modal open={!authenticated} onClose={this.authenticate} closeOnOverlayClick={false} showCloseIcon={false} center={true}>
 							<div className="container header login">
 								Login
@@ -88,7 +88,7 @@ class App extends React.Component<{}, IState> {
 					<Webcam audio={false} screenshotFormat="image/jpeg" ref={this.state.refCamera} />
 							<div className="row nav-row">
 								<div className="btn btn-primary bottom-button" onClick={this.authenticate}>Login</div>
-								<div className="btn btn-primary bottom-button" onClick={this.skip}>Skip</div>
+								<div className="btn btn-primary bottom-button" onClick={this.skip}>Guest Login</div>
 							</div>
 						</Modal> :
 						<div>
@@ -180,6 +180,7 @@ class App extends React.Component<{}, IState> {
 						this.setState({ predictionResult: json.predictions[0] })
 						if (this.state.predictionResult.probability > 0.0) {
 							sessionStorage.setItem('key', 'authenticated');
+							location.reload();
 							this.setState({ authenticated: true })
 						} else {
 							this.setState({ authenticated: false })
@@ -206,6 +207,8 @@ class App extends React.Component<{}, IState> {
 			authenticated: true,
 			skip: true
 		});
+		sessionStorage.setItem('key', 'skip');
+		location.reload();
 	}
 
 	private toggleHamburger = () => {
