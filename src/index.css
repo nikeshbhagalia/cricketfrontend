@@ -189,8 +189,9 @@ form>.btn {
 }
 
 .btn-add {
-    position: absolute;
-    right: 0px;
+    /*position: absolute;
+    right: 0px;*/
+    float: right;
     background: linear-gradient(to right, #cb356b, #bd3f32);
     border: 1px solid white;
     font-family: Open Sans, sans-serif;
