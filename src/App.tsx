@@ -57,6 +57,7 @@ class App extends React.Component<{}, IState> {
 							(!this.state.skip && (authenticated || checkSession == "authenticated")) &&
 								<div id="bt" className="btn btn-primary btn-action btn-add" onClick={this.onOpenModal}>Add Player</div>
 						}
+						{(authenticated || checkSession == "authenticated") && <iframe src="https://www.facebook.com/plugins/share_button.php?href=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&layout=button&size=large&mobile_iframe=true&appId=1488164671254990&width=73&height=28" width="106" height="28" scrolling="no" frameBorder="0" allow="encrypted-media"></iframe>}
 					</div>
 				</div>
 			{(!authenticated && checkSession !== "authenticated") ?

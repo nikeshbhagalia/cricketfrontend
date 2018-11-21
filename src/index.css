@@ -188,9 +188,15 @@ form>.btn {
     border-color: #d18c1b;
 }
 
+iframe {
+    border: none;
+    overflow: hidden;
+    float: right;
+    margin-top: 0%;
+    margin-right: 10px;
+}
+
 .btn-add {
-    /*position: absolute;
-    right: 0px;*/
     float: right;
     background: linear-gradient(to right, #cb356b, #bd3f32);
     border: 1px solid white;
