@@ -41,6 +41,10 @@ form>.btn {
     color: white;
 }
 
+.logo {
+    margin-top: -5px;
+}
+
 
 /* Selected Meme */
 
@@ -192,7 +196,7 @@ iframe {
     border: none;
     overflow: hidden;
     float: right;
-    margin-top: 0.5%;
+    margin-top: 15px;
 }
 
 .btn-add {
@@ -200,6 +204,15 @@ iframe {
     background: linear-gradient(to right, #cb356b, #bd3f32);
     border: 1px solid white;
     font-family: Open Sans, sans-serif;
+    margin-top: 10px;
+}
+
+.btn-l {
+    background: linear-gradient(to right, #cb356b, #bd3f32);
+    border: 1px solid white;
+    font-family: Open Sans, sans-serif;
+    margin-top: 10px;
+    margin-left: 30px;
 }
 
 .playerlist {

@@ -38,6 +38,7 @@ export default class PlayerDetail extends React.Component<IProps, IState> {
         const currentPlayer = this.props.currentPlayer
         const skip = this.props.skip
         const { open } = this.state;
+        const checkSession = sessionStorage.getItem('key');
 		return (
             <div className="row odd-even">
                 {
@@ -54,7 +55,7 @@ export default class PlayerDetail extends React.Component<IProps, IState> {
                         <p>Wickets: <span>{currentPlayer[key].wickets}</span></p>
                         <p>Catches: <span>{currentPlayer[key].catches}</span></p>
                         {
-                            !skip &&
+                            !skip && checkSession !== "skip" &&
                             <div className="player-done-button">
                                 <div className="btn-custom" onClick={this.onOpenModal}>Edit </div>
                                 <div className="btn-custom delete" onClick={this.deletePlayer.bind(this, currentPlayer[key].id)}>Delete </div>

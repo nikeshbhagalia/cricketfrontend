@@ -68,6 +68,7 @@ html {
     display: inline-block;
     cursor: pointer;
     float: right;
+    margin-top: 15px;
 }
 
 .btn {
