@@ -63,7 +63,7 @@ class App extends React.Component<{}, IState> {
 								<div className="hamburger-show">
 								<div className="hamburger-relative">
 									<div className="cross" onClick={this.toggleHamburger}>x</div>
-									<p>{(authenticated || checkSession == "authenticated" || checkSession == "skip") && <iframe src="https://www.facebook.com/plugins/share_button.php?href=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&layout=button&size=large&mobile_iframe=true&appId=1488164671254990&width=73&height=28" width="106" height="28" scrolling="no" frameBorder="0" allow="encrypted-media"></iframe>}</p>
+									<p>{(authenticated || checkSession == "authenticated" || checkSession == "skip") && <iframe src="https://www.facebook.com/plugins/share_button.php?href=https%3A%2F%2Fnikeshhcricstats.azurewebsites.net%2F&layout=button&size=large&mobile_iframe=true&appId=1488164671254990&width=73&height=28" width="106" height="28" scrolling="no" frameBorder="0" allow="encrypted-media"></iframe>}</p>
 									<p>{(!this.state.skip && (authenticated || checkSession == "authenticated")) && <div id="bt" className="btn btn-primary btn-action btn-add" onClick={this.onOpenModal}>Add Player</div>}</p>
 									<p>{(authenticated || checkSession == "authenticated" || checkSession == "skip") && <div id="bt" className="btn btn-primary btn-action btn-l" onClick={this.clearss}>Logout</div>}</p>
 									</div>
@@ -74,7 +74,7 @@ class App extends React.Component<{}, IState> {
 								(!this.state.skip && (authenticated || checkSession == "authenticated")) &&
 								<div id="bt" className="btn btn-primary btn-action btn-add mob" onClick={this.onOpenModal}>Add Player</div>
 							}
-							{(authenticated || checkSession == "authenticated" || checkSession == "skip") && <iframe src="https://www.facebook.com/plugins/share_button.php?href=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&layout=button&size=large&mobile_iframe=true&appId=1488164671254990&width=73&height=28" width="106" height="28" scrolling="no" frameBorder="0" allow="encrypted-media" className="mob"></iframe>}
+							{(authenticated || checkSession == "authenticated" || checkSession == "skip") && <iframe src="https://www.facebook.com/plugins/share_button.php?href=https%3A%2F%2Fnikeshhcricstats.azurewebsites.net%2F&layout=button&size=large&mobile_iframe=true&appId=1488164671254990&width=73&height=28" width="106" height="28" scrolling="no" frameBorder="0" allow="encrypted-media" className="mob"></iframe>}
 						</div>
 					</div>
 					{(!authenticated && checkSession !== "authenticated" && checkSession !== "skip") ?
