@@ -14,6 +14,7 @@ interface IState {
     runsEdit: string,
     wicketsEdit: string,
     catchesEdit: string,
+    checkIndex: number
 }
 
 export default class PlayerDetail extends React.Component<IProps, IState> {
@@ -28,6 +29,7 @@ export default class PlayerDetail extends React.Component<IProps, IState> {
             runsEdit: '',
             wicketsEdit: '',
             catchesEdit: '',
+            checkIndex: 0
         }
 
         this.updatePlayer = this.updatePlayer.bind(this)
@@ -57,14 +59,12 @@ export default class PlayerDetail extends React.Component<IProps, IState> {
                         {
                             !skip && checkSession !== "skip" &&
                             <div className="player-done-button">
-                                <div className="btn-custom" onClick={this.onOpenModal}>Edit </div>
+                                <div className="btn-custom" onClick={this.onOpenModal.bind(this, index)}>Edit </div>
                                 <div className="btn-custom delete" onClick={this.deletePlayer.bind(this, currentPlayer[key].id)}>Delete </div>
                             </div>
                         }
-                        
                         <Modal open={open} onClose={this.onCloseModal}>
                             <form>
-                                {console.log(currentPlayer[key].id)}
                                 <div className="form-group">
                                     <label>Player Name</label>
                                     <input type="text" className="form-control" id="player-edit-name-input" placeholder="Enter Name" onChange={this.updateName.bind(this)}/>
@@ -108,8 +108,9 @@ export default class PlayerDetail extends React.Component<IProps, IState> {
     }
 
     // Modal Open
-    private onOpenModal = () => {
-        this.setState({ open: true });
+    private onOpenModal = (index:any) => {
+        
+        this.setState({ open: true, checkIndex: index });
 	  };
     
     // Modal Close
@@ -119,7 +120,6 @@ export default class PlayerDetail extends React.Component<IProps, IState> {
 
     private updateName = (e:any) => {
         this.setState({ playerName: e.target.value });  
-        console.log(e.target.value)
     }
     private updateCountry = (e:any) => {
 		this.setState({ countryEdit: e.target.value });        
@@ -135,8 +135,7 @@ export default class PlayerDetail extends React.Component<IProps, IState> {
     }
     
     private updatePlayer(index:any){
-        const currentPlayer = this.props.currentPlayer[index]
-        console.log(this.props.currentPlayer[index])
+        const currentPlayer = this.props.currentPlayer[this.state.checkIndex]
         const url = "https://cricketapi2018.azurewebsites.net/api/stats/" + currentPlayer.id
         const updatedName = this.state.playerName
         const updatedCountry = this.state.countryEdit
